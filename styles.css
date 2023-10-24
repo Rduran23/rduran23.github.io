@@ -1,0 +1,201 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #eee;
+}
+
+
+header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    padding: 20px 35px;
+    background-color: blueviolet;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 1000px;
+    max-width: 100%;
+}
+
+
+.home .current {
+    width: 600px;
+    max-width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 50px;
+    border-radius: 20px;
+}
+
+.home .current .temperature {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home .current .temperature .city h2{
+    font-size: 48px;
+}
+
+.home .current .temperature .city p{
+    font-size: 18px;
+    color: #777;
+}
+
+.timebyhours {
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    color: #3b3a3a;
+    padding: 15px 0;
+}
+
+.timebyhours::-webkit-scrollbar{
+    width: 100%;
+    height: 8px;
+}
+
+.timebyhours::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+
+/* Handle */
+.timebyhours::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  .timebyhours::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+.timebyhours .hourbyhour{
+    display: flex;
+    flex-direction: column;
+    min-width: 80px;
+    justify-content: center;
+    text-align: center;
+    background-color: #eee;
+}
+
+.hourbyhour:not(:first-child){
+    border-left: 2px solid white;;
+}
+
+.hourbyhour-temperature {
+    min-height: 250px;
+    height: 250px;
+}
+
+.temperatureimg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 250px; 
+    /*height: 50px;  50 to 250px 5px por cada grado que baje */
+}
+
+.temperatureimg img{
+    width: 32px;
+    height: 32px;
+}
+
+.viento {
+    transform: rotate(--dirviento);
+}
+
+.timetoday {
+    max-width: 100%;
+    text-align: center;
+    overflow-x: auto;
+}
+
+.timetodaytable{
+    max-width: 100%;
+    width: 1000px;
+}
+
+.timetodaytable table{
+    border: none;
+}
+
+.timetoday table tbody tr:nth-child(even){
+    background-color: #cacaca;
+}
+
+.timetoday table tr {
+    height: 30px;
+}
+
+.timethisday {
+    display: flex;
+    flex-direction: column;
+    width: 1000px;
+    max-width: 100%;
+    overflow-x: scroll;
+
+}
+
+.ttd-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+}
+
+.header-row {
+    background-color: #1d7eb6;
+    font-weight: bold;
+}
+
+.ttd-row {
+    padding: 15px 5px;
+}
+
+.ttd-row p{
+    width: 120px;
+}
+
+.info-row {
+    background-color: grey;
+    padding: 20px 30px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 55px;
+    row-gap: 30px;
+}
+
+.moreinfobutton {
+    min-width: 20px;
+    max-width: 20px;
+}
+
+.more-data {
+    display: flex;
+    flex-direction: column;
+}
