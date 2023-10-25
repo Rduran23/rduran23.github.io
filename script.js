@@ -12,6 +12,7 @@ let MAX_TEMPERATURE = 0
 let MIN_TEMPERATURE = 0
 
 let CURRENT_TEMPERATURE = 0
+let CURRENT_HUMIDITY = 0
 
 let CURRENT_PAGE = 0
 
@@ -42,8 +43,11 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
     console.log(weather)
 
     CURRENT_TEMPERATURE = weather.current.temperature_2m
+    CURRENT_HUMIDITY = weather.current.relativehumidity_2m
     MAX_TEMPERATURE = weather.daily.temperature_2m_max[0]
     MIN_TEMPERATURE = weather.daily.temperature_2m_min[0]
+
+
 
 
 
@@ -93,7 +97,6 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
     let noresults = document.querySelector('.noresults')
     let search = document.querySelector('input[name=search]')
     if (!coords.results){
-        console.log("No se encontraron resultados")
         search.placeholder = "No se encontraron resultados"
         search.classList.add("error")
         return
@@ -101,7 +104,6 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
     search.placeholder = "Buscar por ciudad o código postal"
     search.classList.remove("error")
     noresults.style = "display:none"
-    console.log(coords.results)
     let latitude = coords.results[0].latitude
     let longitude = coords.results[0].longitude
     
@@ -144,33 +146,42 @@ formulario.addEventListener("submit", function (e) {
 })
 
 function displayCurrentWeather(){
+    let containerHumidity = document.querySelector('.humiditypercentage')
     let icon = document.querySelector('.temperature img')
     containerTemperature.innerHTML = `${CURRENT_TEMPERATURE}<span>º</span>`
     containerCity.innerHTML = `${CURRENT_CITY},${CURRENT_PARENT_CITY}`
+    containerHumidity.innerHTML = CURRENT_HUMIDITY
     icon.src = 'images/sun.svg'
+    icon.classList.add("sun")
 
     let minmaxtext = document.querySelector('.minmaxtemperature span')
     minmaxtext.innerHTML = `<b>MAX: ${MAX_TEMPERATURE}º / MIN:</b> ${MIN_TEMPERATURE}º`
-    console.log(minmaxtext)
 }
 
 function displayNext24Hours(){
     let content = ""
+    let hprefix = ""
     for (let i = 0; i <= 24; i++){
+        let h = currentHour + i
+        if (h >= 24){h = h - 24}
+        if (h < 10){hprefix = "0"}else{hprefix=""}
         let wline = WeatherData[currentHour+i]
+        let design = MAX_TEMPERATURE - wline.temperature
+
+
         content += `<div class="hourbyhour">
-        <p>${currentHour+i}:00</p>
+        <p>${hprefix}${h}:00</p>
         <div class="hourbyhour-temperature">
-            <div class="temperatureimg">
-                <img src="images/sun.svg">
+            <div class="temperatureimg" style="margin-top: ${design*16}px;">
+                <img src="images/sun.svg" class="sun">
                 <span>${wline.temperature}º</span>
             </div>
         </div>
         <div class="hourbyhour-stats">
-            <p>${wline.rainquantity} mm</p>
-            <p>${wline.rainpercentage} %</p>
+            <p>${wline.rainquantity} mm <i style="color: blue" class="fa-solid fa-droplet"></i></p>
+            <p>${wline.rainpercentage} % <i style="color: brown" class="fa-solid fa-cloud-rain"></i></p>
             <i class="fa fa-arrow-down" style="transform: rotate(${wline.winddirection}deg)"></i>
-            <p>${wline.windspeed} km/h</p>
+            <p>${wline.windspeed} km/h </p>
         </div>
     </div>`
     }
@@ -197,11 +208,13 @@ function displayToday(page){
         </div>
         `
     content += headerContent
+    let hprefix = ""
     for (let i = 0; i < 24; i++){
         let wline = WeatherData[i + p * 24]
+        if (i < 10){hprefix = "0"}else{hprefix=""}
         content += `
         <div class="ttd-row">
-        <div class="ttd-col"><p>${i}:00</p></div>
+        <div class="ttd-col"><p>${hprefix}${i}:00</p></div>
         <div class="ttd-col"><p>${wline.temperature}º</p></div>
         <div class="ttd-col onlydesktop"><p><i class="fa fa-arrow-down" style="transform: rotate(${wline.winddirection}deg)"></i></p></div>
         <div class="ttd-col"><p>${wline.windspeed} km/h</p></div>
@@ -237,7 +250,7 @@ function paginationButton(){
         CURRENT_PAGE--
 
         displayToday(CURRENT_PAGE)
-        if (CURRENT_PAGE <= 1){
+        if (CURRENT_PAGE < 1){
             next.style = "display:block;"
             prev.style = "display: none;"
         }
