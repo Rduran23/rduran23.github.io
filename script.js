@@ -1,3 +1,7 @@
+let WeatherData = []
+let CurrentWeatherData = []
+
+
 const API_KEY = '60aecc6e15c24a90a0a20239232310'
 const API_BASE = 'http://api.weatherapi.com/v1'
 
@@ -9,11 +13,22 @@ let MIN_TEMPERATURE = 0
 
 let CURRENT_TEMPERATURE = 0
 
+let CURRENT_PAGE = 0
+
 const containerTemperature = document.querySelector('.city h2')
 const containerCity = document.querySelector('.city p')
 
+let timethisday = document.querySelector('.timethisday')
+let parentdiv = document.querySelector('.timebyhours')
+
+let nofind = document.querySelector('.nocity')
+let home = document.querySelector('.home')
+
+const next24hoursDIV = document.querySelector('.timebyhours')
+
+const currentHour = new Date().getHours()
+
 const hour = new Date().getHours()
-console.log("Son las",hour)
 
   async function test(lat,lon){
     let curr_hour = hour
@@ -24,35 +39,46 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
     const response = await fetch(call);
     const weather = await response.json();
 
+    console.log(weather)
+
     CURRENT_TEMPERATURE = weather.current.temperature_2m
     MAX_TEMPERATURE = weather.daily.temperature_2m_max[0]
     MIN_TEMPERATURE = weather.daily.temperature_2m_min[0]
 
-    console.log(weather);
 
 
-    CreateCurrent()
-    let h = hour
-    for (let i = 0; i <= 23; i++){
-        let temp = weather.hourly.temperature_2m[hour+i]
-        let rain = weather.hourly.rain[hour+i]
-        let rainprobability = weather.hourly.precipitation_probability[hour+i]
-        let dirviento = weather.hourly.winddirection_10m[hour+i]
-        let velviento = weather.hourly.windspeed_10m[hour+i]
-        let nubes = weather.hourly.cloudcover[hour+i]
+    displayCurrentWeather()
+    let hourlyresults = weather.hourly
 
-        h++;
-        if (h == 24){h = 0}
+    WeatherData = []
+    CurrentWeatherData = []
+
+    for (let i = 0; i < 168; i++){
         
-        CreateHours(h, temp ,rain, rainprobability, dirviento, velviento, nubes)
-
-
-        addtable(
-            i,weather.hourly.temperature_2m[i], weather.hourly.winddirection_10m[i],
-            weather.hourly.windspeed_10m[i], weather.hourly.rain[i],weather.hourly.snowfall[i],
-            weather.hourly.cloudcover[i], weather.hourly.precipitation_probability[i]
-            )
+        WeatherData.push({
+            "index":i,
+            "time": hourlyresults.time[i],
+            "temperature" : hourlyresults.temperature_2m[i],
+            "rainquantity": hourlyresults.rain[i],
+            "rainpercentage": hourlyresults.precipitation_probability[i],
+            "winddirection":hourlyresults.winddirection_10m[i],
+            "windspeed":hourlyresults.windspeed_10m[i],
+            "clouds":hourlyresults.cloudcover[i],
+            "snow":hourlyresults.snowfall[i],
+            "stormpercentage": hourlyresults.snowfall[i],
+        })
     }
+    CurrentWeatherData.push(
+        {
+            "temperature": weather.current.temperature_2m,
+            "rainpercentage": weather.current.precipitation,
+            "humidity": weather.current.relativehumidity_2m,
+        }
+    )
+
+
+    displayNext24Hours()
+    displayToday(0)
 
 
 
@@ -64,141 +90,39 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
     let call = "https://geocoding-api.open-meteo.com/v1/search?name="+city+"&count=10&language=es&format=json"
     const response = await fetch(call);
     const coords = await response.json();
-
+    let noresults = document.querySelector('.noresults')
+    let search = document.querySelector('input[name=search]')
+    if (!coords.results){
+        console.log("No se encontraron resultados")
+        search.placeholder = "No se encontraron resultados"
+        search.classList.add("error")
+        return
+    }
+    search.placeholder = "Buscar por ciudad o código postal"
+    search.classList.remove("error")
+    noresults.style = "display:none"
+    console.log(coords.results)
     let latitude = coords.results[0].latitude
     let longitude = coords.results[0].longitude
     
     CURRENT_CITY = coords.results[0].name
     CURRENT_PARENT_CITY = coords.results[0].admin1
 
-    console.log(coords.results)
 
     test(latitude,longitude)
-
-
-  }
-
-  function CreateCurrent(){
-    let icon = document.querySelector('.temperature img')
-    containerTemperature.innerHTML = `${CURRENT_TEMPERATURE}<span>º</span>`
-    containerCity.innerHTML = `${CURRENT_CITY},${CURRENT_PARENT_CITY}`
-    icon.src = 'images/sun.svg'
-  }
-
-  function CreateHours(hora,temperatura,lluviamm,porcentajelluvia,dirviento,velocidadviento,nubes){
-    let parentdiv = document.querySelector('.timebyhours')
-    let hora_c = hora
-
-    if (hora < 10){hora_c = `0${hora_c}`}
-
-    let calc = MAX_TEMPERATURE - MIN_TEMPERATURE
-    let calcdos = MAX_TEMPERATURE - temperatura
-    let ultcalc = calcdos * 15
-    let icon = "sun"
-    if (nubes >= 0 && nubes < 40){icon = "sun"}
-    if (nubes >= 40 && nubes <= 100){icon = "cloud"}
-    if (hora_c >= 22 || hora_c <= 6){
-        if (nubes >= 0 && nubes < 40){icon = "night"}
-        if (nubes >= 40 && nubes <= 100){icon = "night-cloud"}
-    }else{
-        if (nubes >= 0 && nubes < 40){icon = "sun"}
-        if (nubes >= 40 && nubes <= 100){icon = "cloud"}
+    if (CURRENT_CITY != ""){
+        nofind.style = "display: none"
+        home.style = "display: flex"
     }
+    //resetTable()
 
-
-
-    let constructor = `
-    <div class="hourbyhour">
-            <p>${hora_c}:00</p>
-            <div class="hourbyhour-temperature">
-                <div class="temperatureimg" style="margin-top:${ultcalc}px">
-                    <img src="images/${icon}.svg">
-                    <span>${temperatura}º</span>
-                </div>
-               
-            </div>
-            <div class="hourbyhour-stats">
-            <p>${lluviamm}mm</p>
-            <p>${porcentajelluvia}%</p>
-            <i class="fa fa-arrow-down" style="transform: rotate(${dirviento}deg)"></i>
-            <p>${velocidadviento}km/h</p>
-            </div>
-        </div>
-        `
-    parentdiv.innerHTML += constructor
   }
 
-  getCoords("Alzira")
-
-  function clonediv(){
-    let num = 10
-    let parentdiv = document.querySelector('.timebyhours')
-    let coddiv = parentdiv.innerHTML
-    for (let i = 0; i < num; i++){
-        parentdiv.innerHTML += coddiv
-    }
-  }
-
-
-
-  function addtable(hora,tempeteratura, dirviento, velviento, lluviamm,nieve, nubes, probtormenta){
-    let addh = ""
-    if (hora >0 && hora < 10){let addh = "0"}
-    console.log(velviento)
-
-    let content = `
-    <div class="ttd-row">
-        <p>${addh}${hora}:00</p>
-        <p>${tempeteratura}º</p>
-        <p><i class="fa fa-arrow-down" style="transform: rotate(${dirviento}deg)"></i></p>
-        <p>${velviento} km/h</p>
-        <p>${lluviamm} mm</p>
-        <p>${nieve} cm</p>
-        <p>${nubes} %</p>
-        <p>${probtormenta} %</p>
-        <p class="moreinfobutton"><i data-row="${hora}" onclick="displaymoreinfo(this)" class="fa fa-caret-down"></i></p>
-    </div>
-
-    <div class="info-row" style="display: none">
-                <div class="more-data">
-                    <h2>Sensación termica</h2>
-                    <i class="fa fa-temperature-2"></i>20º
-                </div>
-                <div class="more-data">
-                    <h2>Sensación termica</h2>
-                    <i class="fa fa-temperature-2"></i>20º
-                </div>
-                <div class="more-data">
-                    <h2>Sensación termica</h2>
-                    <i class="fa fa-temperature-2"></i>20º
-                </div>
-                <div class="more-data">
-                    <h2>Sensación termica</h2>
-                    <i class="fa fa-temperature-2"></i>20º
-                </div>
-                <div class="more-data">
-                    <h2>Sensación termica</h2>
-                    <i class="fa fa-temperature-2"></i>20º
-                </div>
-                <div class="more-data">
-                    <h2>Sensación termica</h2>
-                    <i class="fa fa-temperature-2"></i>20º
-                </div>
-            </div>
-    ` 
-
-    let timethisday = document.querySelector('.timethisday')
-    timethisday.innerHTML += content
-  }
 
 function displaymoreinfo(event){
-    console.log(event)
     let row = event.dataset.row
-    console.log(row)
     let rowdiv = document.querySelectorAll('.info-row')[row]
-    console.log(rowdiv)
     let currentMode = rowdiv.style.display
-    console.log(currentMode)
     if (currentMode == "none"){
         event.classList.replace("fa-caret-down", "fa-caret-up")
         rowdiv.style = "display: flex"
@@ -207,3 +131,152 @@ function displaymoreinfo(event){
         rowdiv.style = "display: none"
     }
 }
+
+
+
+
+let formulario = document.getElementById("Buscador")
+formulario.addEventListener("submit", function (e) {
+    let search = document.querySelector('input[name=search]')
+    e.preventDefault()
+    getCoords(search.value)
+    search.value = ""
+})
+
+function displayCurrentWeather(){
+    let icon = document.querySelector('.temperature img')
+    containerTemperature.innerHTML = `${CURRENT_TEMPERATURE}<span>º</span>`
+    containerCity.innerHTML = `${CURRENT_CITY},${CURRENT_PARENT_CITY}`
+    icon.src = 'images/sun.svg'
+
+    let minmaxtext = document.querySelector('.minmaxtemperature span')
+    minmaxtext.innerHTML = `<b>MAX: ${MAX_TEMPERATURE}º / MIN:</b> ${MIN_TEMPERATURE}º`
+    console.log(minmaxtext)
+}
+
+function displayNext24Hours(){
+    let content = ""
+    for (let i = 0; i <= 24; i++){
+        let wline = WeatherData[currentHour+i]
+        content += `<div class="hourbyhour">
+        <p>${currentHour+i}:00</p>
+        <div class="hourbyhour-temperature">
+            <div class="temperatureimg">
+                <img src="images/sun.svg">
+                <span>${wline.temperature}º</span>
+            </div>
+        </div>
+        <div class="hourbyhour-stats">
+            <p>${wline.rainquantity} mm</p>
+            <p>${wline.rainpercentage} %</p>
+            <i class="fa fa-arrow-down" style="transform: rotate(${wline.winddirection}deg)"></i>
+            <p>${wline.windspeed} km/h</p>
+        </div>
+    </div>`
+    }
+   
+    next24hoursDIV.innerHTML = content
+
+}
+
+function displayToday(page){
+    let p = page
+    let content = ""
+    timethisday.innerHTML = ""
+
+    let headerContent = `
+    <div class="ttd-row header-row">
+            <div class="ttd-col"><p>HORAS</p></div>
+            <div class="ttd-col"><p>PREVISIÓN</p></div>
+            <div class="onlydesktop ttd-col"><p>VIENTO</p></div>
+            <div class="ttd-col"><p>RACHAS</p></div>
+            <div class="ttd-col"><p>LLUVIAS</p></div>
+            <div class="ttd-col onlydesktop"><p>NIEVE</p></div>
+            <div class="ttd-col onlydesktop"><p>NUBES</p></div>
+            <div class="ttd-col onlydesktop"><p>% TORMENTA</p></div>
+        </div>
+        `
+    content += headerContent
+    for (let i = 0; i < 24; i++){
+        let wline = WeatherData[i + p * 24]
+        content += `
+        <div class="ttd-row">
+        <div class="ttd-col"><p>${i}:00</p></div>
+        <div class="ttd-col"><p>${wline.temperature}º</p></div>
+        <div class="ttd-col onlydesktop"><p><i class="fa fa-arrow-down" style="transform: rotate(${wline.winddirection}deg)"></i></p></div>
+        <div class="ttd-col"><p>${wline.windspeed} km/h</p></div>
+        <div class="ttd-col"><p>${wline.rainquantity} mm</p></div>
+        <div class="ttd-col onlydesktop"><p>${wline.snow} cm</p></div>
+        <div class="ttd-col onlydesktop"><p>${wline.clouds} %</p></div>
+        <div class="ttd-col onlydesktop"><p>${wline.stormpercentage} % <i style="margin-left: 10px; cursor: pointer;" data-row="${i}" onclick="console.log(this)" class="fa fa-caret-down"></i></p></div>
+    </div>
+        `
+    }
+    timethisday.innerHTML += content
+
+    let text = document.getElementById("textTimeToday")
+    let pageday = new Date();
+    pageday.setDate(pageday.getDate() + page)
+
+    let dd = pageday.getDate();
+    let mm = pageday.getMonth() + 1;
+    let yyyy = pageday.getFullYear();
+
+    text.innerHTML = `${dd}/${mm}/${yyyy}`
+
+
+}
+
+paginationButton()
+
+function paginationButton(){
+    let prev = document.getElementById("goPreviousDay")
+    let next = document.getElementById("goNextDay")
+
+    prev.addEventListener("click", function (e) {
+        CURRENT_PAGE--
+
+        displayToday(CURRENT_PAGE)
+        if (CURRENT_PAGE <= 1){
+            next.style = "display:block;"
+            prev.style = "display: none;"
+        }
+        
+       
+        
+    })
+
+    next.addEventListener("click", function (e) {
+        CURRENT_PAGE++;
+
+        displayToday(CURRENT_PAGE)
+        if (CURRENT_PAGE >= 6){
+            next.style = "display: none;"
+        }
+        prev.style = "display:block;"
+    })
+}
+
+//getCoords("Alzira")
+
+if (CURRENT_CITY == ""){
+    nofind.style = "display: block"
+    home.style = "display: none"
+}
+
+
+async function autolocation(){
+   
+    let call = "https://api.geoapify.com/v1/ipinfo?apiKey=9731c0cd79ed423eb296dd94c8fbd779"
+  const response = await fetch(call);
+    const results = await response.json();
+    console.log(results)
+    console.log(results.city.name)
+    console.log(results.location.latitude)
+    console.log(results.location.longitude)
+    getCoords(results.city.name)
+    test(results.location.latitude,results.location.longitude)
+
+}
+
+autolocation()

@@ -5,33 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+
     <title>El Tiempo</title>
 </head>
 <body>
 
 <header>
-    <div class="logo"><h2>RafaElTiempo</h2></div>
+    <div class="logo"><h2>RafaEl Tiempo</h2></div>
 
     <div class="search">
-        <form>
-            <input name="search" type="search" placeholder="El tiempo en...">
-        </form>
-    </div>
+        <form id="Buscador">
+            <input name="search" type="search" placeholder="Buscar por ciudad o código postal">
+            <button><i class="fa fa-search"></i></button>
+            
 
-    <div class="menu">
-        <button>Menu</button>
+        </form>
+
+
     </div>
+    <span class="noresults" style="display: none;">No se encontraron resultados</span>
+
+
+
+
 </header>
 
-<section class="home">
+
+<section class="menu">
+    
+</section>
+
+<section class="home" style="display: flex;">
     
     <section class="current">
         <div class="temperature">
             <div class="city">
                 <h2></h2>
                 <p></p>
+                <p class="minmaxtemperature">
+                    <span>MAX: 30º / min: 13º</span>
+                </p>
+               
             </div>
-            <img src="sun.png" width="100px" height="100px">
+            <img src="images/sun.svg" width="100px" height="100px">
         </div>
     </section>
 
@@ -41,32 +58,25 @@
     </section>
 
     <br><br>
-    <h2>El tiempo hoy</h2>
+    <div class="timetodayheader">
+        <div class="goYesterday"><i id="goPreviousDay" style="display: none" class="fa fa-arrow-circle-left"></i></div>
+        <h2>El tiempo <span id="textTimeToday"></span></h2>
+        <div class="goTomorrow"><i id="goNextDay" class=" fa fa-arrow-circle-right"></i></div>
+    </div>
 
 
-    <section class="timethisday">
-        <div class="timethisday-header">
-            <div class="ttd-row header-row">
-                <p>HORAS</p>
-                <p>PREVISIÓN</p>
-                <p>VIENTO</p>
-                <p>RACHAS</p>
-                <p>LLUVIAS</p>
-                <p>NIEVE</p>
-                <p>NUBES</p>
-                <p>PROB. DE TORMENTA</p>
-                <p class="moreinfobutton"></p>
-            </div>
-
-
-        </div>
-    </section>
+    <section class="timethisday"></section>
     <br>
  
 
 
 </section>
 
+<section class="nocity" style="display: none;">
+    <p style="color: white;">No se ha encontrado una ciudad</p>
+</section>
+
  <script src="script.js"></script>
 </body>
 </html>
+
