@@ -25,6 +25,9 @@ let parentdiv = document.querySelector('.timebyhours')
 let nofind = document.querySelector('.nocity')
 let home = document.querySelector('.home')
 
+let prev = document.getElementById("goPreviousDay")
+let next = document.getElementById("goNextDay")
+
 const next24hoursDIV = document.querySelector('.timebyhours')
 
 const currentHour = new Date().getHours()
@@ -60,6 +63,8 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
     if (CURRENT_CITY != ""){
         nofind.style = "display: none"
         home.style = "display: flex"
+        prev.style = "display: none"
+        next.style = "display: block"
     }
 
     for (let i = 0; i < 168; i++){
@@ -114,6 +119,7 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
     
     CURRENT_CITY = coords.results[0].name
     CURRENT_PARENT_CITY = coords.results[0].admin1
+    CURRENT_PAGE = 0
 
 
     loadWeatherAPP(latitude,longitude)
@@ -166,6 +172,7 @@ function displayCurrentWeather(){
 function displayNext24Hours(){
     let content = ""
     let hprefix = ""
+    let weathericon = "sun"
     for (let i = 0; i <= 24; i++){
         let h = currentHour + i
         if (h >= 24){h = h - 24}
@@ -173,12 +180,18 @@ function displayNext24Hours(){
         let wline = WeatherData[currentHour+i]
         let design = MAX_TEMPERATURE - wline.temperature
 
+        if (wline.rainpercentage < 20){
+            if (h > 6 && h < 20){weathericon = "sun"}else{weathericon = "night"}
+        }
+        if (wline.rainpercentage >= 20){
+            if (h > 6 && h < 20){weathericon = "rain"}else{weathericon = "night-rain"}
+        }
 
         content += `<div class="hourbyhour">
-        <p>${hprefix}${h}:00</p>
+        <p style="font-weight: bold">${hprefix}${h}:00</p>
         <div class="hourbyhour-temperature">
             <div class="temperatureimg" style="margin-top: ${design*16}px;">
-                <img src="images/sun.svg" class="sun">
+                <img src="images/${weathericon}.svg" class="${weathericon}">
                 <span>${wline.temperature}º</span>
             </div>
         </div>
@@ -248,8 +261,7 @@ function displayToday(page){
 paginationButton()
 
 function paginationButton(){
-    let prev = document.getElementById("goPreviousDay")
-    let next = document.getElementById("goNextDay")
+   
 
     prev.addEventListener("click", function (e) {
         CURRENT_PAGE--
@@ -283,7 +295,12 @@ const geoLocationOptions = {
 }
 
 function geoLocation(){
-    navigator.geolocation.getCurrentPosition(geoLocationSuccess, geoLocationError, geoLocationOptions);
+    if (navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(geoLocationSuccess, geoLocationError, geoLocationOptions);
+    }
+    else{
+        alert('problem has ocurred')
+    }
 }
 
 async function geoLocationSuccess(pos){
@@ -308,8 +325,23 @@ async function geoLocationSuccess(pos){
 
 function geoLocationError(err){
     console.warn(`ERROR(${err.code}): ${err.message}`);
+    getLocationByIp()
+}
+
+/*
+Si no encuentra la geolocalización mediante navegador usaremos
+la IP para intentar obtener la posición del usuario
+*/
+async function getLocationByIp(){
+    let call = "https://api.geoapify.com/v1/ipinfo?apiKey=9731c0cd79ed423eb296dd94c8fbd779"
+    const response = await fetch(call);
+    const results = await response.json();
+    console.log("Resultados ip")
+    console.log(results)
+    CURRENT_CITY = results.city.name
+    CURRENT_PARENT_CITY = results.city.name
+    loadWeatherAPP(results.location.latitude, results.location.longitude)
 }
 
 geoLocation()
   
-//autolocation()
