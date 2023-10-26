@@ -31,7 +31,7 @@ const currentHour = new Date().getHours()
 
 const hour = new Date().getHours()
 
-  async function test(lat,lon){
+  async function loadWeatherAPP(lat,lon){
     let curr_hour = hour
     let call = `
 https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,precipitation,rain&
@@ -56,6 +56,11 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
 
     WeatherData = []
     CurrentWeatherData = []
+
+    if (CURRENT_CITY != ""){
+        nofind.style = "display: none"
+        home.style = "display: flex"
+    }
 
     for (let i = 0; i < 168; i++){
         
@@ -111,7 +116,7 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
     CURRENT_PARENT_CITY = coords.results[0].admin1
 
 
-    test(latitude,longitude)
+    loadWeatherAPP(latitude,longitude)
     if (CURRENT_CITY != ""){
         nofind.style = "display: none"
         home.style = "display: flex"
@@ -270,26 +275,41 @@ function paginationButton(){
     })
 }
 
-//getCoords("Alzira")
 
-if (CURRENT_CITY == ""){
-    nofind.style = "display: block"
-    home.style = "display: none"
+const geoLocationOptions = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0,
 }
 
+function geoLocation(){
+    navigator.geolocation.getCurrentPosition(geoLocationSuccess, geoLocationError, geoLocationOptions);
+}
 
-async function autolocation(){
-   
-    let call = "https://api.geoapify.com/v1/ipinfo?apiKey=9731c0cd79ed423eb296dd94c8fbd779"
-  const response = await fetch(call);
+async function geoLocationSuccess(pos){
+    const crd = pos.coords;
+    let call = `https://api.geoapify.com/v1/geocode/reverse?lat=${crd.latitude}&lon=${crd.longitude}&format=json&apiKey=9731c0cd79ed423eb296dd94c8fbd779`
+    const response = await fetch(call);
     const results = await response.json();
-    console.log(results)
-    console.log(results.city.name)
-    console.log(results.location.latitude)
-    console.log(results.location.longitude)
-    getCoords(results.city.name)
-    test(results.location.latitude,results.location.longitude)
 
+    console.log(results)
+
+    CURRENT_CITY = results.results[0].city
+    CURRENT_PARENT_CITY = results.results[0].county
+    loadWeatherAPP(crd.latitude,crd.longitude)
+
+
+    console.log("Your current position is:");
+    console.log(crd)
+    console.log(`Latitude : ${crd.latitude}`);
+    console.log(`Longitude: ${crd.longitude}`);
+    console.log(`More or less ${crd.accuracy} meters.`);
 }
 
-autolocation()
+function geoLocationError(err){
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+geoLocation()
+  
+//autolocation()
