@@ -7,6 +7,8 @@ const API_BASE = 'http://api.weatherapi.com/v1'
 
 let CURRENT_CITY = ""
 let CURRENT_PARENT_CITY = ""
+let CURRENT_LATITUDE = 0
+let CURRENT_LONGITUDE = 0
 
 let MAX_TEMPERATURE = 0
 let MIN_TEMPERATURE = 0
@@ -38,7 +40,7 @@ const hour = new Date().getHours()
     let curr_hour = hour
     let call = `
 https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,precipitation,rain&
-hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection_10m,cloudcover,snowfall&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FBerlin`
+hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection_10m,cloudcover,snowfall,weathercode&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FBerlin`
     
     const response = await fetch(call);
     const weather = await response.json();
@@ -80,6 +82,7 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
             "clouds":hourlyresults.cloudcover[i],
             "snow":hourlyresults.snowfall[i],
             "stormpercentage": hourlyresults.snowfall[i],
+            "weathercode": hourlyresults.weathercode[i],
         })
     }
     CurrentWeatherData.push(
@@ -95,8 +98,10 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
     displayToday(0)
 
 
-
-
+    if (CURRENT_CITY != localStorage.getItem("favoriteLocation")){
+        let buttonfavorite = document.querySelector('.favorite')
+        buttonfavorite.innerHTML = `<i class="fa-regular fa-star" title="Marcar como favorito"></i>`
+    }
     
   }
 
@@ -160,10 +165,8 @@ function displayCurrentWeather(){
     let containerHumidity = document.querySelector('.humiditypercentage')
     let icon = document.querySelector('.temperature img')
     containerTemperature.innerHTML = `${CURRENT_TEMPERATURE}<span>º</span>`
-    containerCity.innerHTML = `${CURRENT_CITY},${CURRENT_PARENT_CITY}`
+    containerCity.innerHTML = `${CURRENT_CITY}`
     containerHumidity.innerHTML = CURRENT_HUMIDITY
-    icon.src = 'images/sun.svg'
-    icon.classList.add("sun")
 
     let minmaxtext = document.querySelector('.minmaxtemperature span')
     minmaxtext.innerHTML = `<b>MAX: ${MAX_TEMPERATURE}º / MIN:</b> ${MIN_TEMPERATURE}º`
@@ -173,25 +176,42 @@ function displayNext24Hours(){
     let content = ""
     let hprefix = ""
     let weathericon = "sun"
+    let isnight = false
     for (let i = 0; i <= 24; i++){
         let h = currentHour + i
         if (h >= 24){h = h - 24}
         if (h < 10){hprefix = "0"}else{hprefix=""}
         let wline = WeatherData[currentHour+i]
         let design = MAX_TEMPERATURE - wline.temperature
+        if (design <0){design = 0}
 
-        if (wline.rainpercentage < 20){
-            if (h > 6 && h < 20){weathericon = "sun"}else{weathericon = "night"}
+        let weathercode = wline.weathercode
+        if (weathercode == 0){weathericon = "sun"}
+        if (weathercode >0 && weathercode <= 3){weathericon = "cloud"}
+        if (weathercode >= 45 && weathercode <= 48){weathericon = "fog"}
+        if (weathercode >= 51 && weathercode <= 55) { weathericon = "rain"}
+        if (weathercode >= 56 && weathercode <= 57){weathericon = "rain"}
+        if (weathercode >= 61 && weathercode <= 65){weathericon = "rain"}
+        if (weathercode >= 71 && weathercode <= 77){weathericon = "snowy"}
+        if (weathercode >= 80 && weathercode <= 82){weathericon = "rain"}
+        if (weathercode >= 85 && weathercode <= 86){weathericon = "snowy"}
+        if (weathercode >= 95 && weathercode <= 99){weathericon = "thunderstorm"}
+
+        if (h >= 6 && h <= 20){isnight = false}else{isnight=true}
+        if (isnight){
+            if (weathericon == "sun"){weathericon = "night"}
+            if (weathericon == "rain"){weathericon = "night-rain"}
+            if (weathericon == "cloud"){weathericon = "night-cloud"}
         }
-        if (wline.rainpercentage >= 20){
-            if (h > 6 && h < 20){weathericon = "rain"}else{weathericon = "night-rain"}
-        }
+
+       
+
 
         content += `<div class="hourbyhour">
         <p style="font-weight: bold">${hprefix}${h}:00</p>
         <div class="hourbyhour-temperature">
-            <div class="temperatureimg" style="margin-top: ${design*16}px;">
-                <img src="images/${weathericon}.svg" class="${weathericon}">
+            <div class="temperatureimg" style="margin-top: ${design*13}px;">
+                <img src="images/${weathericon}.svg" alt="${weathercode}" class="${weathericon}">
                 <span>${wline.temperature}º</span>
             </div>
         </div>
@@ -203,6 +223,11 @@ function displayNext24Hours(){
         </div>
     </div>`
     }
+    let icon = document.querySelector('.temperature img')
+    icon.src = "images/" + weathericon + ".svg"
+    icon.classList = ""
+    icon.classList.add(weathericon)
+    console.log(weathericon)
    
     next24hoursDIV.innerHTML = content
 
@@ -295,6 +320,16 @@ const geoLocationOptions = {
 }
 
 function geoLocation(){
+    let buttonfavorite = document.querySelector('.favorite')
+
+    if (localStorage.getItem("favoriteLocation")){
+        CURRENT_CITY = localStorage.getItem("favoriteLocation")
+        CURRENT_PARENT_CITY = localStorage.getItem("favoriteParent")
+        loadWeatherAPP(localStorage.getItem("favoriteLatitude"),localStorage.getItem("favoriteLongitude"))
+        buttonfavorite.innerHTML = `<i class="fa fa-star" title="Localización favorita"></i>`
+        return
+
+    }
     if (navigator.geolocation){
         navigator.geolocation.getCurrentPosition(geoLocationSuccess, geoLocationError, geoLocationOptions);
     }
@@ -340,8 +375,24 @@ async function getLocationByIp(){
     console.log(results)
     CURRENT_CITY = results.city.name
     CURRENT_PARENT_CITY = results.city.name
+    CURRENT_LATITUDE = results.location.latitude
+    CURRENT_LONGITUDE = results.location.longitude
     loadWeatherAPP(results.location.latitude, results.location.longitude)
 }
+
+function favoritelocation(){
+    let buttonfavorite = document.querySelector('.favorite')
+    buttonfavorite.addEventListener("click", function() {
+        console.log("Registro guardado")
+        localStorage.setItem("favoriteLocation", CURRENT_CITY)
+        localStorage.setItem("favoriteLocationParent", CURRENT_PARENT_CITY)
+        localStorage.setItem("favoriteLongitude", CURRENT_LONGITUDE)
+        localStorage.setItem("favoriteLatitude", CURRENT_LONGITUDE)
+        buttonfavorite.innerHTML = `<i class="fa fa-star" title="Localización favorita"></i>`
+    })
+    
+}
+favoritelocation()
 
 geoLocation()
   
