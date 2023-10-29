@@ -255,7 +255,7 @@ body {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    overflow-x: scroll;
+    overflow-x: auto;
     color: #3b3a3a;
     padding: 15px 0;
     background-color: white;

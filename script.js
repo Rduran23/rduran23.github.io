@@ -273,7 +273,7 @@ function displayToday(page){
         <div class="ttd-col"><p>${wline.rainquantity} mm</p></div>
         <div class="ttd-col onlydesktop"><p>${wline.snow} cm</p></div>
         <div class="ttd-col onlydesktop"><p>${wline.clouds} %</p></div>
-        <div class="ttd-col onlydesktop"><p>${wline.stormpercentage} % <i style="margin-left: 10px; cursor: pointer;" data-row="${i}" onclick="console.log(this)" class="fa fa-caret-down"></i></p></div>
+        <div class="ttd-col onlydesktop"><p>${wline.stormpercentage} %</p></div>
     </div>
         `
     }
