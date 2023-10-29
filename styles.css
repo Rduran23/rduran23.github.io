@@ -120,6 +120,7 @@ header h2{
 header .search{
     background-color: white;
     border-radius: 100px;
+    position: relative;
 }
 
 header .search form input{
@@ -140,6 +141,41 @@ header .search form button{
 header .search form input.error::placeholder{
     color: rgb(255, 0, 0);
 }
+
+.search .results {
+    background-color: white;
+    top: 60px;
+    z-index: 99999;
+    position: absolute;
+    width: 300px;
+    max-width: 350px;
+    padding: 0px 0px;
+    border: 1px solid black;
+}
+
+.search .results ul{
+    list-style-type: none;
+    padding: 0;
+}
+
+.search .results ul > li {
+    font-size: 0.9em;
+    cursor: pointer;
+    background-color: white;
+    padding: 3px 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.search .results ul > li:hover {
+    background-color: #dad7d7;
+}
+
+.search .results ul > li:not(:last-child){
+    border-bottom: 1px solid black;
+}
+
 
 body {
     width: 100%;

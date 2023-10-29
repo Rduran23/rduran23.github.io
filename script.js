@@ -2,9 +2,6 @@ let WeatherData = []
 let CurrentWeatherData = []
 
 
-const API_KEY = '60aecc6e15c24a90a0a20239232310'
-const API_BASE = 'http://api.weatherapi.com/v1'
-
 let CURRENT_CITY = ""
 let CURRENT_PARENT_CITY = ""
 let CURRENT_LATITUDE = 0
@@ -21,16 +18,13 @@ let CURRENT_PAGE = 0
 const containerTemperature = document.querySelector('.city h2')
 const containerCity = document.querySelector('.city p')
 
-let timethisday = document.querySelector('.timethisday')
-let parentdiv = document.querySelector('.timebyhours')
+const timethisday = document.querySelector('.timethisday')
+const parentdiv = document.querySelector('.timebyhours')
 
 let nofind = document.querySelector('.nocity')
 let home = document.querySelector('.home')
 
-let prev = document.getElementById("goPreviousDay")
-let next = document.getElementById("goNextDay")
 
-const next24hoursDIV = document.querySelector('.timebyhours')
 
 const currentHour = new Date().getHours()
 
@@ -45,7 +39,6 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
     const response = await fetch(call);
     const weather = await response.json();
 
-    console.log(weather)
 
     CURRENT_TEMPERATURE = weather.current.temperature_2m
     CURRENT_HUMIDITY = weather.current.relativehumidity_2m
@@ -53,22 +46,11 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
     MIN_TEMPERATURE = weather.daily.temperature_2m_min[0]
 
 
-
-
-
     displayCurrentWeather()
     let hourlyresults = weather.hourly
 
     WeatherData = []
     CurrentWeatherData = []
-
-    if (CURRENT_CITY != ""){
-        nofind.style = "display: none"
-        home.style = "display: flex"
-        prev.style = "display: none"
-        next.style = "display: block"
-    }
-
     for (let i = 0; i < 168; i++){
         
         WeatherData.push({
@@ -116,24 +98,51 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
         search.classList.add("error")
         return
     }
-    search.placeholder = "Buscar por ciudad o código postal"
-    search.classList.remove("error")
-    noresults.style = "display:none"
-    let latitude = coords.results[0].latitude
-    let longitude = coords.results[0].longitude
-    
-    CURRENT_CITY = coords.results[0].name
-    CURRENT_PARENT_CITY = coords.results[0].admin1
-    CURRENT_PAGE = 0
+    let parentlistresults = document.querySelector('.results')
+    let listresults = document.querySelector(".cityresults")
+
+   
+
+    if (coords.results.length > 1){
+        console.log("mas de uno")
+        console.log(coords.results)
+        listresults.innerHTML = ""
+        parentlistresults.style = "display: block"
+        for (let i = 0; i < coords.results.length; i++){
+            let r = coords.results[i]
+            let parent = ""
+            if (coords.results[i].admin1){parent = coords.results[i].admin1}
+            console.log(coords.results[i])
+            console.log(coords.results[i].name, coords.results[i].admin1 ,coords.results[i].country)
+            listresults.innerHTML += `<li onclick="pickCity(this)" class="cityresult" data-name="${r.name}" data-parent="${r.admin1}" data-lat="${r.latitude}" data-lon="${r.longitude}">
+            ${r.name}, ${parent}, ${r.country}
+            </li>`
+        }
+    }else{
+        search.placeholder = "Buscar por ciudad o código postal"
+        search.classList.remove("error")
+        noresults.style = "display:none"
+        let latitude = coords.results[0].latitude
+        let longitude = coords.results[0].longitude
+        
+        CURRENT_CITY = coords.results[0].name
+        CURRENT_PARENT_CITY = coords.results[0].admin1
+        CURRENT_PAGE = 0
 
 
-    loadWeatherAPP(latitude,longitude)
-    if (CURRENT_CITY != ""){
-        nofind.style = "display: none"
-        home.style = "display: flex"
+        loadWeatherAPP(latitude,longitude)
     }
-    //resetTable()
+    
+  }
 
+  function pickCity(t){
+    let parentlistresults = document.querySelector('.results')
+    console.log(t)
+    CURRENT_CITY = t.getAttribute('data-name')
+    CURRENT_PARENT_CITY = t.getAttribute('data-parent')
+    CURRENT_PAGE = 0
+    loadWeatherAPP(t.getAttribute('data-lat'), t.getAttribute('data-lon'))
+    parentlistresults.style = "display: none"
   }
 
 
@@ -165,7 +174,7 @@ function displayCurrentWeather(){
     let containerHumidity = document.querySelector('.humiditypercentage')
     let icon = document.querySelector('.temperature img')
     containerTemperature.innerHTML = `${CURRENT_TEMPERATURE}<span>º</span>`
-    containerCity.innerHTML = `${CURRENT_CITY}`
+    containerCity.innerHTML = `${CURRENT_CITY}, ${CURRENT_PARENT_CITY}`
     containerHumidity.innerHTML = CURRENT_HUMIDITY
 
     let minmaxtext = document.querySelector('.minmaxtemperature span')
@@ -173,6 +182,8 @@ function displayCurrentWeather(){
 }
 
 function displayNext24Hours(){
+    const next24hoursDIV = document.querySelector('.timebyhours')
+
     let content = ""
     let hprefix = ""
     let weathericon = "sun"
@@ -227,7 +238,6 @@ function displayNext24Hours(){
     icon.src = "images/" + weathericon + ".svg"
     icon.classList = ""
     icon.classList.add(weathericon)
-    console.log(weathericon)
    
     next24hoursDIV.innerHTML = content
 
@@ -283,96 +293,45 @@ function displayToday(page){
 
 }
 
-paginationButton()
-
-function paginationButton(){
-   
-
-    prev.addEventListener("click", function (e) {
-        CURRENT_PAGE--
-
-        displayToday(CURRENT_PAGE)
-        if (CURRENT_PAGE < 1){
-            next.style = "display:block;"
-            prev.style = "display: none;"
-        }
-        
-       
-        
-    })
-
-    next.addEventListener("click", function (e) {
-        CURRENT_PAGE++;
-
-        displayToday(CURRENT_PAGE)
-        if (CURRENT_PAGE >= 6){
-            next.style = "display: none;"
-        }
-        prev.style = "display:block;"
-    })
-}
+// APP START
+startAPP()
 
 
-const geoLocationOptions = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0,
-}
-
-function geoLocation(){
-    let buttonfavorite = document.querySelector('.favorite')
-
+function startAPP(){
+    const geoLocationOptions = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+    }
+    // 1. If Have a favorite location in localStorage load this info by default
     if (localStorage.getItem("favoriteLocation")){
         CURRENT_CITY = localStorage.getItem("favoriteLocation")
         CURRENT_PARENT_CITY = localStorage.getItem("favoriteParent")
         loadWeatherAPP(localStorage.getItem("favoriteLatitude"),localStorage.getItem("favoriteLongitude"))
         buttonfavorite.innerHTML = `<i class="fa fa-star" title="Localización favorita"></i>`
+        console.log("Loaded APP By Favorite Location")
         return
-
+    }else{
+        if (navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(geoLocationSuccess, geoLocationError, geoLocationOptions);
+            console.log("Loaded APP By Navigator Location")
+        }
+        else{
+            // Navegador can't obtain geolocation (no permission, or other problems)
+            startAPPWithIP()
+            console.log("Loaded APP By IP")
+        }
     }
-    if (navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(geoLocationSuccess, geoLocationError, geoLocationOptions);
-    }
-    else{
-        alert('problem has ocurred')
-    }
-}
-
-async function geoLocationSuccess(pos){
-    const crd = pos.coords;
-    let call = `https://api.geoapify.com/v1/geocode/reverse?lat=${crd.latitude}&lon=${crd.longitude}&format=json&apiKey=9731c0cd79ed423eb296dd94c8fbd779`
-    const response = await fetch(call);
-    const results = await response.json();
-
-    console.log(results)
-
-    CURRENT_CITY = results.results[0].city
-    CURRENT_PARENT_CITY = results.results[0].county
-    loadWeatherAPP(crd.latitude,crd.longitude)
-
-
-    console.log("Your current position is:");
-    console.log(crd)
-    console.log(`Latitude : ${crd.latitude}`);
-    console.log(`Longitude: ${crd.longitude}`);
-    console.log(`More or less ${crd.accuracy} meters.`);
-}
-
-function geoLocationError(err){
-    console.warn(`ERROR(${err.code}): ${err.message}`);
-    getLocationByIp()
 }
 
 /*
 Si no encuentra la geolocalización mediante navegador usaremos
 la IP para intentar obtener la posición del usuario
 */
-async function getLocationByIp(){
+async function startAPPWithIP(){
     let call = "https://api.geoapify.com/v1/ipinfo?apiKey=9731c0cd79ed423eb296dd94c8fbd779"
     const response = await fetch(call);
     const results = await response.json();
-    console.log("Resultados ip")
-    console.log(results)
     CURRENT_CITY = results.city.name
     CURRENT_PARENT_CITY = results.city.name
     CURRENT_LATITUDE = results.location.latitude
@@ -380,19 +339,53 @@ async function getLocationByIp(){
     loadWeatherAPP(results.location.latitude, results.location.longitude)
 }
 
-function favoritelocation(){
+
+async function geoLocationSuccess(pos){
+    const crd = pos.coords;
+    let call = `https://api.geoapify.com/v1/geocode/reverse?lat=${crd.latitude}&lon=${crd.longitude}&format=json&apiKey=9731c0cd79ed423eb296dd94c8fbd779`
+    const response = await fetch(call);
+    const results = await response.json();
+    CURRENT_CITY = results.results[0].city
+    CURRENT_PARENT_CITY = results.results[0].county
+    loadWeatherAPP(crd.latitude,crd.longitude)
+}
+
+function geoLocationError(err){
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+    //getLocationByIp()
+}
+  
+
+const favoritelocation = () => {
     let buttonfavorite = document.querySelector('.favorite')
     buttonfavorite.addEventListener("click", function() {
-        console.log("Registro guardado")
         localStorage.setItem("favoriteLocation", CURRENT_CITY)
         localStorage.setItem("favoriteLocationParent", CURRENT_PARENT_CITY)
         localStorage.setItem("favoriteLongitude", CURRENT_LONGITUDE)
         localStorage.setItem("favoriteLatitude", CURRENT_LONGITUDE)
         buttonfavorite.innerHTML = `<i class="fa fa-star" title="Localización favorita"></i>`
     })
-    
 }
-favoritelocation()
 
-geoLocation()
-  
+const previousPage = document.getElementById("goPreviousDay")
+const nextPage = document.getElementById("goNextDay")
+
+previousPage.addEventListener("click", function (e) {
+    CURRENT_PAGE--
+    displayToday(CURRENT_PAGE)
+    if (CURRENT_PAGE < 1){
+        nextPage.style = "display:block;"
+        previousPage.style = "display: none;"
+    }
+})
+
+nextPage.addEventListener("click", function (e) {
+    CURRENT_PAGE++;
+    displayToday(CURRENT_PAGE)
+    if (CURRENT_PAGE >= 6){
+        nextPage.style = "display: none;"
+    }
+    previousPage.style = "display:block;"
+})
+
+
