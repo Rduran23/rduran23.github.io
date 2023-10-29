@@ -110,11 +110,12 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
         parentlistresults.style = "display: block"
 
         for (let i = 0; i < coords.results.length; i++){
+            let imgsrc = r.country_code.toLowerCase()
             let r = coords.results[i]
             let parent = ""
             if (coords.results[i].admin1){parent = coords.results[i].admin1}
             listresults.innerHTML += `<li onclick="pickCity(this)" class="cityresult" data-name="${r.name}" data-parent="${r.admin1}" data-lat="${r.latitude}" data-lon="${r.longitude}">
-            ${r.name}, ${parent} <img width="32" height="16" alt="${r.country}" title="${r.country}" src="images/flags/${r.country_code}.svg">
+            ${r.name}, ${parent} <img width="32" height="16" alt="${r.country}" title="${r.country}" src="images/flags/${imgsrc}.svg">
             </li>`
         }
        
