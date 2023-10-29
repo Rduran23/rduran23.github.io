@@ -78,6 +78,8 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
 
     displayNext24Hours()
     displayToday(0)
+    const prevpage = document.getElementById("goPreviousDay")
+    prevpage.style = "display: none"
 
 
     if (CURRENT_CITY != localStorage.getItem("favoriteLocation")){
@@ -104,20 +106,18 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
    
 
     if (coords.results.length > 1){
-        console.log("mas de uno")
-        console.log(coords.results)
         listresults.innerHTML = ""
         parentlistresults.style = "display: block"
+
         for (let i = 0; i < coords.results.length; i++){
             let r = coords.results[i]
             let parent = ""
             if (coords.results[i].admin1){parent = coords.results[i].admin1}
-            console.log(coords.results[i])
-            console.log(coords.results[i].name, coords.results[i].admin1 ,coords.results[i].country)
             listresults.innerHTML += `<li onclick="pickCity(this)" class="cityresult" data-name="${r.name}" data-parent="${r.admin1}" data-lat="${r.latitude}" data-lon="${r.longitude}">
-            ${r.name}, ${parent}, ${r.country}
+            ${r.name}, ${parent} <img width="32" height="16" alt="${r.country}" title="${r.country}" src="images/flags/${r.country_code}.svg">
             </li>`
         }
+       
     }else{
         search.placeholder = "Buscar por ciudad o código postal"
         search.classList.remove("error")
@@ -137,7 +137,6 @@ hourly=temperature_2m,precipitation_probability,rain,windspeed_10m,winddirection
 
   function pickCity(t){
     let parentlistresults = document.querySelector('.results')
-    console.log(t)
     CURRENT_CITY = t.getAttribute('data-name')
     CURRENT_PARENT_CITY = t.getAttribute('data-parent')
     CURRENT_PAGE = 0
@@ -171,11 +170,11 @@ formulario.addEventListener("submit", function (e) {
 })
 
 function displayCurrentWeather(){
-    let containerHumidity = document.querySelector('.humiditypercentage')
+    let containerHumidity = document.querySelector('.humidity')
     let icon = document.querySelector('.temperature img')
     containerTemperature.innerHTML = `${CURRENT_TEMPERATURE}<span>º</span>`
     containerCity.innerHTML = `${CURRENT_CITY}, ${CURRENT_PARENT_CITY}`
-    containerHumidity.innerHTML = CURRENT_HUMIDITY
+    containerHumidity.innerHTML = `Humedad: <span class="humiditypercentage">${CURRENT_HUMIDITY}</span>%`
 
     let minmaxtext = document.querySelector('.minmaxtemperature span')
     minmaxtext.innerHTML = `<b>MAX: ${MAX_TEMPERATURE}º / MIN:</b> ${MIN_TEMPERATURE}º`
@@ -389,3 +388,9 @@ nextPage.addEventListener("click", function (e) {
 })
 
 
+window.addEventListener("mouseup", function(event){
+    const divSearch = document.querySelector('.results')
+    if (event.target != divSearch && event.target.parentNode != divSearch){
+        divSearch.style = "display: none"
+    }
+});
