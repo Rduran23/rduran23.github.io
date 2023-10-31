@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rduran</title>
+</head>
+<style>
+.projects{
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+    width: 500px;
+    height: 500px;
+    background-color: blue;
+}
+
+.card h2{
+    display: flex;
+    width: 100%;
+    height: 100px;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: white;
+}
+
+.card h2 a{
+    text-decoration: none;
+    color: white;
+}
+
+</style>
+<body>
+
+<div class="projects">
+    <div class="card" style="background: url('weather.png'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+        <h2><a target="_blank" href="/weather">Weather App</a></h2>
+    </div>
+
+    <div class="card" style="background: url('memgame.png'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+        <h2><a target="_blank" href="/memgame">Memory Game</a></h2>
+    </div>
+
+    
+</div>
+
+</body>
+</html>
