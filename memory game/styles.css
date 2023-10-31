@@ -1,0 +1,154 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+@media only screen and (max-width: 600px) {
+    :root {
+        --cardwidth: 75px;
+        --cardheight: 75px;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    :root {
+        --cardwidth: 150px;
+        --cardheight: 150px;
+    }
+}
+
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #8BC6EC;
+    background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    background-color: rgb(91, 91, 177);
+    padding: 10px 10px;
+}
+
+
+header .timer p{
+    border-radius: 50%;
+    background-color: white;
+    padding: 10px 10px;
+}
+
+.game {
+    /* width: calc(var(--cardwidth) * 4 + 100px); */
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+@media only screen and (max-width: 600px) {
+    .smallboard {
+        width: calc(var(--cardwidth) * 4 + 100px);
+    }
+    
+    .bigboard {
+        width: calc(var(--cardwidth) * 4 + 100px);
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .smallboard {
+        width: calc(var(--cardwidth) * 4 + 100px);
+    }
+    
+    .bigboard {
+        width: calc(var(--cardwidth) * 6 + 100px);
+    }
+}
+
+
+.game .card{
+    position: relative;
+    background-color: #3e5a9b;
+    height: var(--cardheight);
+    min-width: var(--cardwidth);
+    border-radius: 6px;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    transition: transform 1s ease;
+
+}
+
+.game .card:hover{
+    /* animation: spinCard 3s forwards; */
+}
+
+.game .card div{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    display: grid;
+    place-content: center;
+    font-size: 3em;
+}
+
+.game .card .back{
+    transform: rotateY(180deg);
+}
+
+.picked {
+    transform: rotateY(180deg); transition: all 2s;
+}
+
+@keyframes spinCard {
+    0% {
+        transform: rotateY(0);
+    }
+
+    100% {
+        transform: rotateY(180deg);
+    }
+}
+
+.footergame {
+    padding: 20px 0;
+}
+
+.footergame button{
+    text-decoration: none;
+    background: #1c2b5c;
+    color: white;
+    font-size: 1.4em;
+    border: 1px solid white;
+    padding: 10px 10px;
+}
+
+.pregame {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+}
+
+.pregame button{
+    cursor: pointer;
+    padding: 10px 10px;
+    font-size: 2em;
+    background-color: rgb(12, 55, 112);
+    color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+}

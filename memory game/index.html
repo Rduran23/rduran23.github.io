@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+    <div class="stats"> <!-- Partidas jugadas, ganadas, etc  -->
+        <p>Partidas jugadas: <span>0</span></p>
+    </div> 
+
+    <div class="timer">  <!-- temporizador  -->
+        <p style="visibility: hidden;">60</p>
+    </div>
+
+    <div class="score"> <!-- Puntuación partida actual  -->
+        <p>Puntuación: <span>0</span></p>
+    </div>
+</header>
+
+<section class="pregame">
+    <button onclick="startGame(1)">Modo fácil</button>
+    <button onclick="startGame(2)">Modo normal</button>
+    <button onclick="startGame(3)">Modo dificil</button>
+    <button onclick="startGame(4)">Modo experto</button>
+</section>
+
+<section class="game smallboard" style="display: none;">
+
+</section>
+<section class="footergame"  style="display: none;">
+    <button class="returnToMenu">Volver al menú</button>
+    <button class="restartGame">Reiniciar juego</button>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
