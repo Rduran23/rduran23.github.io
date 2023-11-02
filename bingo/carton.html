@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="carton.css">
+    <title>Bingo</title>
+</head>
+<body>
+    <section class="tickets">
+   
+    </section>
+    <div class="generateTickets">
+        <button onclick="createTicket()">Generar cartón</button>
+        <button onclick="removeTickets()">Reiniciar cartones</button>
+    </div>
+<script>
+
+
+function removeTickets(){
+    let ticketboard = document.querySelector('.tickets')
+    ticketboard.innerHTML = ""
+}
+    function clickSquares() {
+    let squares = document.querySelectorAll('.square')
+    squares.forEach(element => {
+        element.addEventListener("click", () => {
+            if (!element.classList.contains("empty")){
+                element.classList.add("out")
+            }
+        })
+    });
+}
+
+
+function createTicket(){
+
+    let carton = [
+        [0,0,0],
+        [0,0,0],
+        [0,0,0],
+        [0,0,0],
+        [0,0,0],
+        [0,0,0],
+        [0,0,0],
+        [0,0,0],
+        [0,0,0],
+    ]    
+
+    for (let i = 0; i < 9; i++){
+        for (let j = 0; j < 3; j++){
+            let max = 10
+            if (i == 8){max = 11}
+            let rand = Math.floor(Math.random()*max);
+            let num = rand + i*10
+            console.log(num)
+            if (carton[i].includes(num)){
+                j--
+            }else{
+                carton[i][j] = num
+            }
+
+        }
+        let ar = Array.from(carton[i])
+        ar.sort(function(a,b){return a - b})
+        carton[i] = ar
+    }
+
+   console.log(carton)
+   let n = 12
+   while (n > 0){
+    let pos = [2,2,2,2,1,1,1,1,0,0,0,0]
+        let randdeleteC = Math.floor(Math.random()*9);
+        if (carton[randdeleteC][pos[n]] != 0){
+            n--
+            carton[randdeleteC][pos[n]] = 0
+        }
+   }
+
+    let cont = ""
+    cont += `<div class="ticket">`
+    let ticketboard = document.querySelector('.tickets')
+    carton.forEach((fila, i) => {
+        fila.forEach((elemento, j) => {
+            if (elemento == 0){
+                cont += `<div class="square empty"><span></span></div>`
+            }else{
+                cont += `<div class="square"><span>${elemento}</span></div>`
+            }
+          //console.log(`Elemento en la posición [${i}][${j}]: ${elemento}`);
+        });
+      });
+      cont += "</div>"
+      ticketboard.innerHTML +=cont
+
+    console.log(carton)
+    clickSquares()
+}
+
+</script>
+</body>
+</html>
