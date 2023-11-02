@@ -5,17 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Tilt+Neon&display=swap" rel="stylesheet">
     <title>Bingo en Casa</title>
 </head>
 <body>
     <header>
         <button class="volume" onclick="toggleVoice()"><i class="fa-solid fa-volume-xmark"></i></button>
-        <button class="play" onclick="startBingo()">NUEVA PARTIDA</button>
-        <button style="display: none;" class="pause" onclick="pausarBingo()">PAUSAR</button>
+        <button class="play" onclick="startBingo()">Nueva partida</button>
+        <button style="display: none;" class="pause" onclick="pausarBingo()">Pausar</button>
+        <a href="./"><button>Volver</button></a>
     </header>
 <section class="game">
     <div class="currentnumber"></div>
     <div class="grid"></div>
+    <div class="last_numbers">
+        <h3>Ultimos numeros</h3>
+        <div class="last">
+            
+        </div>
+    </div>
 </section>
 
 

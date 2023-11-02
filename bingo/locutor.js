@@ -47,6 +47,7 @@ function speak(texto){
 }
 
 function num(){
+    let ultimos = document.querySelector('.last_numbers .last')
     const terminaencinco = /5$/;
 
     if (bolas_fuera.length >= 90){
@@ -66,8 +67,11 @@ function num(){
     bolas_bombo.splice(n,1)
 
     let b = document.querySelector(`#box-${item}`)
-    b.style = "border-color: green; color: black;"
+    b.style = "background-color: green; color: white;"
     currentnumber.innerHTML = `<span>${item}</span>`
+    if (bolas_fuera.length > 1){
+        ultimos.innerHTML += `<span>${bolas_fuera[bolas_fuera.length-2]}</span>`
+    }
 }
 
 function startBingo(){
@@ -85,7 +89,7 @@ function pausarBingo(){
         button.innerHTML = "PAUSAR"
     }else{
         isOnPause = true
-        button.innerHTML = "REANUDAR"
+        button.innerHTML = "Cont"
     }
 }
 
