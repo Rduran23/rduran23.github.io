@@ -7,6 +7,10 @@ body {
     background-color: #0093E9;
     font-family: 'Roboto', sans-serif;
     font-family: 'Tilt Neon', sans-serif;
+    background: url('images/bgcarton.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100vh;
 }
 header {
     display: flex;
@@ -152,6 +156,8 @@ header button{
 }
 
 .last_numbers {
+    visibility: hidden;
+    max-width: 100%;
     width: 100%;
     display: flex;
     flex-flow: column wrap;
@@ -159,14 +165,25 @@ header button{
     justify-content: center;
 }
 
+.last_numbers h3{
+    max-width: 100%;
+    width: 500px;
+    background-color: #0077b6;
+    color: #eee;
+    padding: 10px 0;
+    text-align: center;
+}
+
 .last_numbers .last{
-    width: 100%;
+    max-width: 100%;
+    width: 500px;
+    background-color: white;
     display: flex;
     flex-direction: row-reverse;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
-    padding: 15px 0;
+    padding: 8px 5px;
     overflow: hidden;
 }
 
@@ -177,13 +194,15 @@ header button{
     width: 50px;
     height: 50px;
     padding: 10px 10px;
-    background-color: white;
+    background-color: #87b1be;
+    color: #FFF;
     margin: 0 5px;
     border-radius: 50%;
 }
 
 .last_numbers .last span:last-child{
-    background-color: lightblue;
+    background-color: #0093E9;
+
 }
 
 @keyframes dropball {

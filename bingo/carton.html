@@ -10,13 +10,14 @@
     <title>Bingo</title>
 </head>
 <body>
-    <section class="tickets">
-   
-    </section>
     <div class="generateTickets">
         <button onclick="createTicket()">Generar cartón</button>
         <button onclick="removeTickets()">Reiniciar cartones</button>
     </div>
+    <section class="tickets">
+   
+    </section>
+    
     <a href="./" class="returnToMenu">Volver al menú</a>
 <script>
 
@@ -30,7 +31,7 @@ function removeTickets(){
     squares.forEach(element => {
         element.addEventListener("click", () => {
             if (!element.classList.contains("empty")){
-                element.classList.add("out")
+                element.classList.toggle("out")
             }
         })
     });

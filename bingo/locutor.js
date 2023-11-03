@@ -6,6 +6,9 @@ let isOnPause = true
 const grid = document.querySelector('.grid')
 const currentnumber = document.querySelector('.currentnumber')
 
+let ultimos_parent = document.querySelector('.last_numbers')
+let ultimos = document.querySelector('.last_numbers .last')
+
 const pauseButton = document.querySelector('.pause')
 
 let bolas = 0
@@ -32,6 +35,8 @@ function createBoard(){
         }
     }
     grid.innerHTML = content
+    ultimos_parent.style = "visibility: visible"
+    ultimos.innerHTML = ""
 }
 
 function speak(texto){
@@ -47,7 +52,6 @@ function speak(texto){
 }
 
 function num(){
-    let ultimos = document.querySelector('.last_numbers .last')
     const terminaencinco = /5$/;
 
     if (bolas_fuera.length >= 90){
@@ -70,7 +74,14 @@ function num(){
     b.style = "background-color: green; color: white;"
     currentnumber.innerHTML = `<span>${item}</span>`
     if (bolas_fuera.length > 1){
-        ultimos.innerHTML += `<span>${bolas_fuera[bolas_fuera.length-2]}</span>`
+        if (bolas_fuera.length > 5){
+            ultimos.innerHTML = ""
+            for (let i = 6; i > 1; i--){
+                ultimos.innerHTML += `<span>${bolas_fuera[bolas_fuera.length-i]}</span>`
+            }
+        }else{  
+            ultimos.innerHTML += `<span>${bolas_fuera[bolas_fuera.length-2]}</span>`
+        }
     }
 }
 
@@ -122,6 +133,7 @@ const playingBingo = function(){
 }
 
 interval = setInterval(playingBingo, 5000);
+//interval = setInterval(playingBingo, 500); //only for test
 
 
 

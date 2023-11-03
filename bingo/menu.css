@@ -65,6 +65,6 @@ body {
     text-shadow: 3px 0px 7px rgba(0, 0, 0, 0.8), -3px 0px 7px rgba(0, 0, 0, 0.8), 0px 4px 7px rgba(0, 0, 0, 0.8);
 }
 
-
-
-
+.menu .modo:hover .info h2{
+    color: #FFFF00;
+}
