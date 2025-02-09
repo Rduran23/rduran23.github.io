@@ -8,6 +8,7 @@ body {
 }
 
 .container {
+    position: relative;
     max-width: 900px;
     margin: 2rem auto;
     padding: 2rem;
@@ -17,7 +18,30 @@ body {
     overflow: hidden;
 }
 
+#corregirFlotante {
+    position: absolute;
+    right: 15px;
+    top: 20px;
+    z-index: 9999;
+    background: transparent;
+    border: none;
+}
+
+#corregirFlotante:disabled {
+    cursor: not-allowed; /* Cursor de no permitido */
+}
+
+#corregirFlotante svg {
+    width: 24px; /* Tamaño del SVG */
+    height: 24px;
+    fill: white; /* Color blanco para el icono */
+}
+
+
+
+
 #question-container {
+    height: 500px;
     max-height: 500px;
     overflow-y: auto;
     padding: 0 1rem;
@@ -26,10 +50,10 @@ body {
 
 h1 {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: #1E40AF;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     text-transform: uppercase;
 }
 
@@ -43,12 +67,12 @@ h1 {
 }
 
 .question:hover {
-    transform: translateY(-5px);
+    /* transform: translateY(-5px); */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .question p {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: #2D3748;
     margin-bottom: 1rem;
@@ -61,12 +85,12 @@ h1 {
     align-items: center;
     gap: 0.5rem;
 }
-
 .answer input {
     accent-color: #1E40AF; /* Color para los inputs */
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-right: 0.75rem;
+    width: 1rem;         /* Tamaño fijo para el círculo */
+    height: 1rem;        /* Tamaño fijo para el círculo */
+    margin-right: 0.25rem;
+    flex-shrink: 0;        /* Evitar que el tamaño cambie con el contenido */
 }
 
 .answer span {
@@ -134,4 +158,49 @@ h1 {
         padding: 1rem;
         font-size: 1rem;
     }
+}
+
+/* Estilos para el contenedor del selector de cantidad de preguntas */
+.question-count {
+    margin: 20px 0;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.question-count label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-right: 10px;
+}
+
+.question-count select {
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-weight: 400;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.question-count select:focus {
+    border-color: #2563EB; /* Color verde cuando el select está en foco */
+    outline: none;
+}
+
+.question-count select option {
+    font-size: 1rem;
+}
+
+/* Estilo general para mejorar la accesibilidad */
+.question-count select:hover {
+    border-color: #2563EB; /* Cambio de color al pasar el cursor */
+}
+
+.question-count select:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
 }
