@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    
+    <title>Test Examen Seguridad</title>
+    
+</head>
+<body>
+
+    <div class="container">
+        <h1>Test de Conocimiento</h1>
+        <p class="text-center">Responde todas las preguntas antes de finalizar.</p>
+
+        <div id="question-container"></div>
+
+        <p id="error-message" class="error-message"></p>
+        <button id="finish-button" class="btn" disabled>Finalizar Test</button>
+        <p id="score-message" class="text-center"></p>
+    </div>
+
+    <script type="module">
+        import { preguntasVigilante } from './data.js';  // Importa preguntas desde data.js
+
+        let currentQuestions = [];
+        let selectedAnswers = {};
+        let testCompleted = false;
+        let score = 0;
+
+        // Función para cargar preguntas aleatorias
+        function loadQuestions() {
+            const shuffledQuestions = [...preguntasVigilante].sort(() => Math.random() - 0.5);
+            currentQuestions = shuffledQuestions.slice(0, 10);
+            renderQuestions();
+        }
+
+        // Función para renderizar las preguntas en el DOM
+        function renderQuestions() {
+            const container = document.getElementById("question-container");
+            container.innerHTML = '';
+
+            currentQuestions.forEach(question => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+
+                const questionText = document.createElement('p');
+                questionText.textContent = question.enunciado;
+                questionDiv.appendChild(questionText);
+
+                question.respuestas.forEach(respuesta => {
+                    const label = document.createElement('label');
+                    label.classList.add('answer');
+
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = question.enunciado;
+                    input.value = respuesta.respuesta;
+                    input.addEventListener('change', () => handleAnswerChange(question.enunciado, respuesta.respuesta));
+
+                    const span = document.createElement('span');
+                    span.textContent = respuesta.respuesta;
+
+                    label.appendChild(input);
+                    label.appendChild(span);
+                    questionDiv.appendChild(label);
+                });
+
+                container.appendChild(questionDiv);
+            });
+        }
+
+        // Función para manejar el cambio de respuesta
+        function handleAnswerChange(questionEnunciado, selectedRespuesta) {
+            selectedAnswers[questionEnunciado] = selectedRespuesta;
+            document.getElementById("finish-button").disabled = Object.keys(selectedAnswers).length !== currentQuestions.length;
+        }
+
+        // Función para finalizar el test
+        function finalizarTest() {
+            if (Object.keys(selectedAnswers).length !== currentQuestions.length) {
+                document.getElementById("error-message").textContent = 'Por favor, responde todas las preguntas antes de finalizar.';
+                return;
+            }
+
+            let correctAnswers = 0;
+
+            currentQuestions.forEach(question => {
+                const selectedAnswer = selectedAnswers[question.enunciado];
+                const correctAnswer = question.respuestas.find(respuesta => respuesta.correcto);
+
+                // Comprobamos si la respuesta seleccionada es correcta
+                if (selectedAnswer === correctAnswer.respuesta) {
+                    correctAnswers++;
+                }
+
+                // Resaltar las respuestas correctas o incorrectas
+                const questionDiv = document.querySelectorAll('.question')[currentQuestions.indexOf(question)];
+                questionDiv.querySelectorAll('label').forEach(label => {
+                    const span = label.querySelector('span');
+                    if (span.textContent === correctAnswer.respuesta) {
+                        span.classList.add('correct');
+                    }
+                    if (span.textContent === selectedAnswer && span.textContent !== correctAnswer.respuesta) {
+                        span.classList.add('incorrect');
+                    }
+                });
+            });
+
+            score = correctAnswers;
+            testCompleted = true;
+
+            document.getElementById("score-message").textContent = `Puntaje: ${correctAnswers} de ${currentQuestions.length}`;
+            document.getElementById("finish-button").disabled = true;
+        }
+
+        // Iniciar test
+        loadQuestions();
+
+        // Event Listener para el botón de finalizar
+        document.getElementById("finish-button").addEventListener('click', finalizarTest);
+    </script>
+
+</body>
+</html>
