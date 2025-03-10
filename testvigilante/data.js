@@ -2587,11 +2587,11 @@ export const preguntasVigilante = [
       "respuestas": [
         {
           "respuesta": "Decúbito supino.",
-          "correcto": false
+          "correcto": true
         },
         {
           "respuesta": "Lateral de seguridad.",
-          "correcto": true
+          "correcto": false
         },
         {
           "respuesta": "Decúbito prono.",
