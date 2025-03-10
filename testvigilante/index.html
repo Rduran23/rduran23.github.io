@@ -27,6 +27,7 @@
                 <option value="50">50 Preguntas</option>
                 <option value="80">80 Preguntas (Examen)</option>
                 <option value="100">100 Preguntas</option>
+                <option value="180">Todas (180)</option>
             </select>
         </div>
 
@@ -41,6 +42,9 @@
 
     <script type="module">
         import { preguntasVigilante } from './data.js';  // Importa preguntas desde data.js
+
+        const questionsLength = preguntasVigilante.length;
+        console.log(`Preguntas cargadas: ${questionsLength}`);
 
         let currentQuestions = [];
         let selectedAnswers = {};
@@ -154,6 +158,12 @@
 
             // Cargar nuevas preguntas y renderizar
             loadQuestions(questionCount);
+
+            // Mover el scroll al inicio de #question-container
+            window.scrollTo(0, 0);
+            document.getElementById("question-container").scrollTo({ top: 0, behavior: "smooth" });
+
+
         }
 
         // Inicializar el test con las preguntas seleccionadas
