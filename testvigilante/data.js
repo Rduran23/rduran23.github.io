@@ -2184,7 +2184,7 @@ export const preguntasVigilante = [
       ]
     },
     {
-      "enunciado": "En un control de acceso de vehículos, ¿dónde se situará el vigilante para realizar las",
+      "enunciado": "En un control de acceso de vehículos, ¿dónde se situará el vigilante para realizar las comprobaciones debidas una vez detenido el vehículo?:",
       "respuestas": [
         {
           "respuesta": "Delante del vehículo.",
