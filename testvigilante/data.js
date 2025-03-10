@@ -2163,7 +2163,7 @@ export const preguntasVigilante = [
       ]
     },
     {
-      "enunciado": "Los vigilantes de seguridad que realicen rondas utilizando patrulleros deben realizar una",
+      "enunciado": "Los vigilantes de seguridad que realicen rondas utilizando patrulleros deben realizar una revisión del vehículo:",
       "respuestas": [
         {
           "respuesta": "Antes de iniciar el servicio.",
@@ -3237,7 +3237,7 @@ export const preguntasVigilante = [
       "enunciado": "Los valores límite de exposición son:",
       "respuestas": [
         {
-          "respuesta": "Los valores límite de exposición por encima de los cuales los trabajadores pueden estar sometidos a trastornos transitorios de las",
+          "respuesta": "Los valores límite de exposición por encima de los cuales los trabajadores pueden estar sometidos a trastornos transitorios de las percepciones sensoriales",
           "correcto": false
         },
         {
