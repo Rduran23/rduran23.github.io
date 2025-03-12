@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+
+    <title>Test Examen Seguridad</title>
+</head>
+<body>
+    <button id="corregirFlotante" disabled>
+        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-dashed-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.56 3.69a9 9 0 0 0 -2.92 1.95" /><path d="M3.69 8.56a9 9 0 0 0 -.69 3.44" /><path d="M3.69 15.44a9 9 0 0 0 1.95 2.92" /><path d="M8.56 20.31a9 9 0 0 0 3.44 .69" /><path d="M15.44 20.31a9 9 0 0 0 2.92 -1.95" /><path d="M20.31 15.44a9 9 0 0 0 .69 -3.44" /><path d="M20.31 8.56a9 9 0 0 0 -1.95 -2.92" /><path d="M15.44 3.69a9 9 0 0 0 -3.44 -.69" /><path d="M9 12l2 2l4 -4" /></svg>
+    </button>
+
+    <div class="container">
+        <h1>V. Seguridad - R. Durán</h1>
+        <!-- <p class="text-center">Responde todas las preguntas antes de finalizar.</p> -->
+
+        <!-- Selector de cantidad de preguntas -->
+        <div class="question-count">
+            <label for="question-count-select">Selecciona la cantidad de preguntas:</label>
+            <select id="question-count-select">
+                <option value="10">10 Preguntas</option>
+                <option value="35">35 Preguntas (Todas)</option>
+                
+            </select>
+        </div>
+
+        <div id="question-container"></div>
+
+        <p id="error-message" class="error-message"></p>
+        <p id="score-message" class="text-center"></p>
+
+        <button id="finish-button" class="btn" disabled>Finalizar Test</button>
+        <button id="restart-button" class="btn">Nuevo Test</button>
+    </div>
+
+    <script type="module">
+        import { preguntasVigilante } from './data.js';  // Importa preguntas desde data.js
+
+        const questionsLength = preguntasVigilante.length;
+        console.log(`Preguntas cargadas: ${questionsLength}`);
+
+        let currentQuestions = [];
+        let selectedAnswers = {};
+        let testCompleted = false;
+        let score = 0;
+
+        // Función para cargar preguntas aleatorias
+        function loadQuestions(questionCount = 10) {
+            const shuffledQuestions = [...preguntasVigilante].sort(() => Math.random() - 0.5);
+            currentQuestions = shuffledQuestions.slice(0, questionCount); // Cargar el número de preguntas seleccionado
+            renderQuestions(); // Renderizar las preguntas
+        }
+
+        // Función para renderizar las preguntas en el DOM
+        function renderQuestions() {
+            const container = document.getElementById("question-container");
+            container.innerHTML = '';  // Limpiar las preguntas anteriores
+
+            currentQuestions.forEach(question => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+
+                const questionText = document.createElement('p');
+                questionText.textContent = question.enunciado;
+                questionDiv.appendChild(questionText);
+
+                question.respuestas.forEach(respuesta => {
+                    const label = document.createElement('label');
+                    label.classList.add('answer');
+
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = question.enunciado;
+                    input.value = respuesta.respuesta;
+                    input.addEventListener('change', () => handleAnswerChange(question.enunciado, respuesta.respuesta));
+
+                    const span = document.createElement('span');
+                    span.textContent = respuesta.respuesta;
+
+                    label.appendChild(input);
+                    label.appendChild(span);
+                    questionDiv.appendChild(label);
+                });
+
+                container.appendChild(questionDiv);
+            });
+        }
+
+        // Función para manejar el cambio de respuesta
+        function handleAnswerChange(questionEnunciado, selectedRespuesta) {
+            selectedAnswers[questionEnunciado] = selectedRespuesta;
+            document.getElementById("finish-button").disabled = Object.keys(selectedAnswers).length !== currentQuestions.length;
+            document.getElementById("corregirFlotante").disabled = Object.keys(selectedAnswers).length !== currentQuestions.length;
+        }
+
+        // Función para finalizar el test
+        function finalizarTest() {
+            if (Object.keys(selectedAnswers).length !== currentQuestions.length) {
+                document.getElementById("error-message").textContent = 'Por favor, responde todas las preguntas antes de finalizar.';
+                return;
+            }
+
+            let correctAnswers = 0;
+
+            currentQuestions.forEach(question => {
+                const selectedAnswer = selectedAnswers[question.enunciado];
+                const correctAnswer = question.respuestas.find(respuesta => respuesta.correcto);
+
+                // Comprobamos si la respuesta seleccionada es correcta
+                if (selectedAnswer === correctAnswer.respuesta) {
+                    correctAnswers++;
+                }
+
+                // Resaltar las respuestas correctas o incorrectas
+                const questionDiv = document.querySelectorAll('.question')[currentQuestions.indexOf(question)];
+                questionDiv.querySelectorAll('label').forEach(label => {
+                    const span = label.querySelector('span');
+                    if (span.textContent === correctAnswer.respuesta) {
+                        span.classList.add('correct');
+                    }
+                    if (span.textContent === selectedAnswer && span.textContent !== correctAnswer.respuesta) {
+                        span.classList.add('incorrect');
+                    }
+                });
+            });
+
+            score = correctAnswers;
+            testCompleted = true;
+
+            document.getElementById("score-message").textContent = `Respuestas correctas: ${correctAnswers} de ${currentQuestions.length}`;
+            document.getElementById("finish-button").disabled = true;
+            document.getElementById("corregirFlotante").disabled = true;
+        }
+
+        // Función para reiniciar el test
+        function reiniciarTest() {
+            // Restablecer las variables
+            selectedAnswers = {};  // Borrar las respuestas
+            testCompleted = false;
+            score = 0;
+            document.getElementById("error-message").textContent = '';
+            document.getElementById("score-message").textContent = '';
+            document.getElementById("finish-button").disabled = true;
+            document.getElementById("corregirFlotante").disabled = true;
+
+            // Limpiar las preguntas previas
+            document.getElementById("question-container").innerHTML = '';
+
+            // Obtener el número de preguntas seleccionadas
+            const questionCount = parseInt(document.getElementById("question-count-select").value);
+
+            // Cargar nuevas preguntas y renderizar
+            loadQuestions(questionCount);
+
+            // Mover el scroll al inicio de #question-container
+            window.scrollTo(0, 0);
+            document.getElementById("question-container").scrollTo({ top: 0, behavior: "smooth" });
+
+
+        }
+
+        // Inicializar el test con las preguntas seleccionadas
+        const questionCountSelect = document.getElementById("question-count-select");
+        questionCountSelect.addEventListener('change', () => reiniciarTest());
+
+        // Cargar preguntas al iniciar
+        loadQuestions(10);  // Por defecto, 10 preguntas
+
+        // Event Listener para el botón de finalizar
+        document.getElementById("finish-button").addEventListener('click', finalizarTest);
+        document.getElementById("corregirFlotante").addEventListener('click', finalizarTest);
+
+        document.getElementById("restart-button").addEventListener('click', reiniciarTest);
+    </script>
+
+</body>
+</html>
