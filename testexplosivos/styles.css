@@ -204,3 +204,86 @@ h1 {
     background-color: #f0f0f0;
     cursor: not-allowed;
 }
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #f4f7fc;
+    }
+
+    .container {
+        background-color: #1e1e1e;
+        box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+        color: #90caf9;
+    }
+
+    .question {
+        background-color: #2a2a2a;
+        box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+    }
+
+    .question p {
+        color: #e0e0e0;
+    }
+
+    .answer span {
+        color: #e0e0e0;
+    }
+
+    .answer input {
+        accent-color: #90caf9;
+    }
+
+    .btn {
+        background-color: #1565c0;
+        color: white;
+    }
+
+    .btn:hover {
+        background-color: #1976d2;
+    }
+
+    .btn:disabled {
+        background-color: #444;
+        color: #999;
+    }
+
+    .error-message {
+        color: #ff6b6b;
+    }
+
+    .correct {
+        color: #81c784;
+    }
+
+    .incorrect {
+        color: #ff6b6b;
+    }
+
+    .question-count label {
+        color: #f4f7fc;
+    }
+
+    .question-count select {
+        background-color: #333;
+        color: white;
+        border: 1px solid #555;
+    }
+
+    .question-count select:focus {
+        border-color: #64b5f6;
+    }
+
+    .question-count select:hover {
+        border-color: #64b5f6;
+    }
+
+    .question-count select:disabled {
+        background-color: #222;
+        color: #777;
+    }
+}

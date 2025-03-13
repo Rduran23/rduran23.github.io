@@ -13,7 +13,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Titulación de posgrado con más de 50 ICTS",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Título de formación profesional establecido por el Gobierno",
@@ -35,7 +35,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "La Dirección General de la Guardia Civil",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "La Unidad de Intervención de Armas",
@@ -53,7 +53,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "2,5 m",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "3 m",
@@ -71,7 +71,7 @@ export const preguntasVigilante = [
     "respuestas": [
       {
         "respuesta": "10 m",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "5 m",
@@ -101,7 +101,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Nombre del responsable o máxima autoridad del edificio",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Identificación del edificio o local",
@@ -123,7 +123,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Superficiales, semienterrados y subterráneos",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Semienterrados, enterrados y subterráneos",
@@ -141,7 +141,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "50.000 kg",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "25.000 kg",
@@ -162,8 +162,8 @@ export const preguntasVigilante = [
         "correcto": false
       },
       {
-        "respuesta": "Grado IV",
-        "correcto": false
+        "respuesta": "Grado IV (sería grado VII)",
+        "correcto": true
       },
       {
         "respuesta": "Grado V",
@@ -181,7 +181,7 @@ export const preguntasVigilante = [
     "respuestas": [
       {
         "respuesta": "ADR",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "AET",
@@ -207,7 +207,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Guía de Circulación",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Permiso de transporte",
