@@ -162,7 +162,7 @@ export const preguntasVigilante = [
         "correcto": false
       },
       {
-        "respuesta": "Grado IV (sería grado VII)",
+        "respuesta": "Grado IV",
         "correcto": true
       },
       {
@@ -233,7 +233,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Homologados, certificados o verificados",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Certificados, verificados o clasificados",
@@ -251,7 +251,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Telecomunicación, CCTV, acústico y óptico",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Óptico, CCTV y ultrasonido",
@@ -281,7 +281,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Todas son correctas",
-        "correcto": false
+        "correcto": true
       }
     ]
   },
@@ -295,7 +295,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Control manual o personal, control semimanual, control automático",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Control manual o personal, control semimanual, control semiautomático",
@@ -321,7 +321,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Identificación, Autorización, Registro y acceso, Salida",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Identificación, Entrada, Registro, Salida",
@@ -347,7 +347,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "El cañón no excede de 30 cm o cuya longitud total no supera los 60 cm",
-        "correcto": false
+        "correcto": true
       }
     ]
   },
@@ -369,7 +369,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Cañón, armazón y cilindro",
-        "correcto": false
+        "correcto": true
       }
     ]
   },
@@ -379,7 +379,7 @@ export const preguntasVigilante = [
     "respuestas": [
       {
         "respuesta": "El armazón",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "El cañón",
@@ -413,7 +413,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Alimentación",
-        "correcto": false
+        "correcto": true
       }
     ]
   },
@@ -423,7 +423,7 @@ export const preguntasVigilante = [
     "respuestas": [
       {
         "respuesta": "Bulón",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Levante",
@@ -457,7 +457,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Seguro de acerrojamiento incompleto",
-        "correcto": false
+        "correcto": true
       }
     ]
   },
@@ -479,7 +479,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Cerrojo, grapón, carro, percutor y extractor",
-        "correcto": false
+        "correcto": true
       }
     ]
   },
@@ -493,7 +493,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Grupo Disparo",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Grupo Asta",
@@ -519,7 +519,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "La culata y la cantonera",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "La culata y el guardamanos",
@@ -545,7 +545,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Boxer",
-        "correcto": false
+        "correcto": true
       }
     ]
   },
@@ -555,7 +555,7 @@ export const preguntasVigilante = [
     "respuestas": [
       {
         "respuesta": "Potencia de detonación",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Poder rompedor",
@@ -581,7 +581,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "A la velocidad de producción de la reacción química y no a la onda de choque",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "A la velocidad de protección de la reacción química y no a la onda de choque",
@@ -599,7 +599,7 @@ export const preguntasVigilante = [
     "respuestas": [
       {
         "respuesta": "Las dinamitas gelatinosas",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Los que incorporan materiales pulverulentos",
@@ -629,7 +629,7 @@ export const preguntasVigilante = [
       },
       {
         "respuesta": "Sensibilidad",
-        "correcto": false
+        "correcto": true
       },
       {
         "respuesta": "Velocidad",
@@ -652,7 +652,7 @@ export const preguntasVigilante = [
     },
     {
       "respuesta": "Hidrogeles",
-      "correcto": false
+      "correcto": true
     },
     {
       "respuesta": "Emulsiones",
@@ -678,7 +678,7 @@ export const preguntasVigilante = [
     },
     {
       "respuesta": "Todas son correctas",
-      "correcto": false
+      "correcto": true
     }
   ]
 },
@@ -688,7 +688,7 @@ export const preguntasVigilante = [
   "respuestas": [
     {
       "respuesta": "Dinamita",
-      "correcto": false
+      "correcto": true
     },
     {
       "respuesta": "ANFO",
@@ -718,7 +718,7 @@ export const preguntasVigilante = [
     },
     {
       "respuesta": "Detonadores temporizados",
-      "correcto": false
+      "correcto": true
     },
     {
       "respuesta": "Detonadores deflagradores",
@@ -740,7 +740,7 @@ export const preguntasVigilante = [
     },
     {
       "respuesta": "Pentrita",
-      "correcto": false
+      "correcto": true
     },
     {
       "respuesta": "Dentrita",
@@ -762,7 +762,7 @@ export const preguntasVigilante = [
     },
     {
       "respuesta": "14 h",
-      "correcto": false
+      "correcto": true
     },
     {
       "respuesta": "24 h",
