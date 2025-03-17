@@ -132,12 +132,12 @@ h1 {
 }
 
 .correct {
-    color: #4CAF50;
+    color: #4CAF50 !important;
     font-weight: bold;
 }
 
 .incorrect {
-    color: #FF4C4C;
+    color: #FF4C4C !important;
 }
 
 /* Responsividad */
@@ -256,13 +256,7 @@ h1 {
         color: #ff6b6b;
     }
 
-    .correct {
-        color: #81c784;
-    }
-
-    .incorrect {
-        color: #ff6b6b;
-    }
+   
 
     .question-count label {
         color: #f4f7fc;
@@ -285,5 +279,15 @@ h1 {
     .question-count select:disabled {
         background-color: #222;
         color: #777;
+    }
+
+    .correct {
+        color: #81c784 !important;
+        font-weight: bold;
+
+    }
+
+    .incorrect {
+        color: #ff6b6b !important;
     }
 }
