@@ -281,13 +281,13 @@ h1 {
         color: #777;
     }
 
-    .correct {
-        color: #81c784 !important;
+    .answer span.correct {
+        color: #81c784;
         font-weight: bold;
 
     }
 
-    .incorrect {
-        color: #ff6b6b !important;
+    .answer span.incorrect {
+        color: #ff6b6b;
     }
 }
