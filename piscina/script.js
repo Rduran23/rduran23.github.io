@@ -13,7 +13,7 @@ const htmlOriginal = `
 
     <div style="padding-bottom:10px;border-bottom:2px solid #ccc">
         <div style="text-align:left">
-            <img src="unnamed.png"
+            <img src="https://rduran23.github.io/piscina/logo.png"
                 alt="Logo"
                 style="width:80px">
         </div>
